@@ -21,7 +21,7 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-
+    const OWN_MESSAGE = 'ownMessage';
     public function behaviors()
     {
         return [
@@ -29,12 +29,6 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function afterSave($insert, $changedAttributes)
-    {
-        $auth = Yii::$app->authManager;
-        $user = $auth->getRole('user'); // Получаем роль user
-        $auth->assign($user, $this->id);
-    }
 
     public function rules()
     {
@@ -44,6 +38,11 @@ class User extends ActiveRecord implements IdentityInterface
             [['login','password_hash'],'string'],
             ['id','integer']
         ];
+    }
+
+    public static function tableName(): string
+    {
+        return '{{%user}}';
     }
 
     /**

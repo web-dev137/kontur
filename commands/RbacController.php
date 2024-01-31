@@ -14,12 +14,12 @@ class RbacController extends \yii\console\Controller
         $rule = new MessageOwnerRule();
         $auth->add($rule);
 
-        $updateMessage = $auth->createPermission('updateMessage');
-        $updateMessage->ruleName = $rule->name;
-        $auth->add($updateMessage);
+        $ownMessage = $auth->createPermission('ownMessage');
+        $ownMessage->ruleName = $rule->name;
+        $auth->add($ownMessage);
 
         $user = $auth->createRole('user');
         $auth->add($user);
-        $auth->addChild($user, $updateMessage);
+        $auth->addChild($user, $ownMessage);
     }
 }

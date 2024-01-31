@@ -14,7 +14,8 @@ class m240122_122644_create_message_table extends Migration
     {
         $this->createTable('{{%message}}', [
             'id' => $this->primaryKey(),
-            'author_id' => $this->integer()->unique()->notNull(),
+            'author_id' => $this->integer()->notNull(),
+            'recipient' => $this->integer()->notNull(),
             'msg' => $this->string()
         ]);
     }

@@ -14,6 +14,7 @@ $config = [
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
+            'defaultRoles' => ['user']
         ],
         'request' => [
             "parsers" => [
@@ -22,6 +23,15 @@ $config = [
             'enableCsrfCookie' => false
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             //'cookieValidationKey' => 'aIXU6NRym9OFHnRsJE-cWjShVtUp01PB',
+        ],
+        'response' => [
+            'formatters' => [
+                'json' => [
+                    'class' => 'yii\web\JsonResponseFormatter',
+                    'prettyPrint' => YII_DEBUG,
+                    'encodeOptions' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+                ],
+            ],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -59,9 +69,10 @@ $config = [
                 "GET api"=>"api/default/index",
                 "POST api/login"=>"api/default/login",
                 "POST api/sign-up"=>"api/default/sign-up",
-                // "POST sign-up" => "site/sign-up",
-                "POST api/message/update" => "api/message/update",
-                "GET api/message/get-messages" => "api/message/get-messages"
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/message','pluralize' => false],
+                "POST api/msg/send" => "api/message/create",
+                "GET api/msg/get-msg/<usr_id:\d+>" => "api/message/get-messages",
+                "POST api/msg/reply/<msg_id:\d+>" => "api/message/reply"
             ],
         ],
 

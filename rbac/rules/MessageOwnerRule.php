@@ -2,13 +2,15 @@
 
 namespace app\rbac\rules;
 
+use app\models\Message;
+use app\models\User;
 use yii\base\InvalidCallException;
 use yii\rbac\Item;
 
 class MessageOwnerRule extends \yii\rbac\Rule
 {
 
-    public $name = 'messageOwner';
+    public $name = 'ownerMessage';
     /**
      * @inheritDoc
      */
