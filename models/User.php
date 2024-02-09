@@ -21,7 +21,7 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    const OWN_MESSAGE = 'ownMessage';
+    const POST_OWNER = 'ownPost';
     public function behaviors()
     {
         return [
@@ -62,7 +62,7 @@ class User extends ActiveRecord implements IdentityInterface
         return static::find()
             ->joinWith('tokens t')
             ->andWhere(['t.token' => $token])
-           // ->andWhere(['>', 't.expired_at', time()])
+            ->andWhere(['>', 't.expired_at', time()])
             ->one();
     }
 

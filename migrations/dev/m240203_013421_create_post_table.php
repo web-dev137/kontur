@@ -3,20 +3,20 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%message}}`.
+ * Handles the creation of table `{{%post}}`.
  */
-class m240122_122644_create_message_table extends Migration
+class m240203_013421_create_post_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('{{%message}}', [
+        $this->createTable('{{%post}}', [
             'id' => $this->primaryKey(),
             'author_id' => $this->integer()->notNull(),
-            'recipient' => $this->integer()->notNull(),
-            'msg' => $this->string()
+            'post' => $this->string(),
+            'status' => $this->string(50)->defaultValue('public')
         ]);
     }
 
@@ -25,6 +25,6 @@ class m240122_122644_create_message_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%message}}');
+        $this->dropTable('{{%post}}');
     }
 }

@@ -4,11 +4,23 @@
 namespace Api;
 
 use \ApiTester;
+use app\fixtures\TokenFixture;
+use app\fixtures\UserFixture;
 
 class SignUpCest
 {
     public function _before(ApiTester $I)
     {
+        $I->haveFixtures([
+            'user' => [
+                'class' => UserFixture::class,
+                'dataFile' => codecept_data_dir().'user.php'
+            ],
+            'token' => [
+                'class' => TokenFixture::class,
+                'dataFile' => codecept_data_dir().'token.php'
+            ]
+        ]);
     }
 
     // tests

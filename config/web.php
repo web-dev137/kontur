@@ -69,10 +69,14 @@ $config = [
                 "GET api"=>"api/default/index",
                 "POST api/login"=>"api/default/login",
                 "POST api/sign-up"=>"api/default/sign-up",
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/message','pluralize' => false],
-                "POST api/msg/send" => "api/message/create",
-                "GET api/msg/get-msg/<usr_id:\d+>" => "api/message/get-messages",
-                "POST api/msg/reply/<msg_id:\d+>" => "api/message/reply"
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/post',
+                    'pluralize' => false
+                ],
+                "GET api/post/<action>" => "api/post/<action>",
+                "GET api/post/<post_id:\d+>/get-replies" => "api/post/get-replies",
+                "POST api/post/<post_id:\d+>/reply" => "api/post/reply"
             ],
         ],
 

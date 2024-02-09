@@ -2,7 +2,7 @@
 
 namespace app\commands;
 
-use app\rbac\rules\MessageOwnerRule;
+use app\rbac\rules\PostOwnerRule;
 
 class RbacController extends \yii\console\Controller
 {
@@ -11,15 +11,15 @@ class RbacController extends \yii\console\Controller
         $auth = \Yii::$app->authManager;
         $auth->removeAll();
 
-        $rule = new MessageOwnerRule();
+        $rule = new PostOwnerRule();
         $auth->add($rule);
 
-        $ownMessage = $auth->createPermission('ownMessage');
-        $ownMessage->ruleName = $rule->name;
-        $auth->add($ownMessage);
+        $ownPost = $auth->createPermission('ownPost');
+        $ownPost->ruleName = $rule->name;
+        $auth->add($ownPost);
 
         $user = $auth->createRole('user');
         $auth->add($user);
-        $auth->addChild($user, $ownMessage);
+        $auth->addChild($user, $ownPost);
     }
 }

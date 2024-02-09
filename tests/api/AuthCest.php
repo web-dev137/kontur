@@ -4,14 +4,11 @@
 namespace Api;
 
 use \ApiTester;
-use app\models\Token;
 use app\fixtures\TokenFixture;
 use app\fixtures\UserFixture;
 
-
 class AuthCest
 {
-
     public function _before(ApiTester $I)
     {
         $I->haveFixtures([
@@ -25,7 +22,6 @@ class AuthCest
             ]
         ]);
     }
-
 
     public function success(ApiTester $I)
     {
