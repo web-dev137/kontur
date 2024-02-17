@@ -52,9 +52,9 @@ class LoginForm extends Model
     }
 
     /**
-     * @return Token|User|null
+     * @return Token|null
      */
-    public function auth(): Token|User|null
+    public function auth(): Token|null
     {
         if ($this->validate()) {
 

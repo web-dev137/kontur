@@ -76,7 +76,9 @@ $config = [
                 ],
                 "GET api/post/<action>" => "api/post/<action>",
                 "GET api/post/<post_id:\d+>/get-replies" => "api/post/get-replies",
-                "POST api/post/<post_id:\d+>/reply" => "api/post/reply"
+                "POST api/post/<post_id:\d+>/reply" => "api/post/reply",
+                '<action>' => 'site/<action>'
+
             ],
         ],
 
@@ -99,6 +101,7 @@ if (YII_ENV_DEV) {
         // uncomment the following to add your IP if you are not connecting from localhost.
         //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
+
 }
 
 return $config;

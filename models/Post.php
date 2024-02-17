@@ -3,16 +3,59 @@
 namespace app\models;
 
 use Yii;
+use OpenApi\Annotations as QA;
 
 /**
- * @property integer $id
- * @property integer $author_id
- * @property string $post
- * @property string $status
- * @property Reply[] $replies
- */
+ * @OA\Schema(
+ *     title="Post",
+ *     required={"post"}
+ *  )
+*/
 class Post extends \yii\db\ActiveRecord
 {
+    /**
+     *  @OA\Property(
+     *     property="id",
+     *     type="integer",
+     *     description="ID",
+     *     readOnly="true",
+     *     example=1
+     *  ),
+     * @property string $id
+     *
+     *  @OA\Property(
+     *     property="author_id",
+     *     type="integer",
+     *     description="Server current date time",
+     *     readOnly="true",
+     *     example=1
+     *  ),
+     * @property string $author_id
+     *
+     *  @OA\Property(
+     *     property="post",
+     *     type="string",
+     *     description="Text post",
+     *     example="post1 first"
+     *  ),
+     * @property string $post
+     *
+     *  @OA\Property(
+     *     property="status",
+     *     type="string",
+     *     description="status: public, auth, private",
+     *     example="auth"
+     *  ),
+     * @property string $status
+     *
+     * @QA\Property(
+     *     property="reply",
+     *     type="array",
+
+     *     @QA\Items(ref="#/components/schemas/Reply")
+     * )
+     * @property Reply[] $replies
+     */
     const GUEST = 'public';
     const AUTH = 'auth';
     const SPECIFY = 'private';

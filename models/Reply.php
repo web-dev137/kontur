@@ -3,12 +3,50 @@
 namespace app\models;
 
 use Yii;
+use OpenApi\Annotations as QA;
 
 /**
+ * @OA\Schema(
+ *   schema="Reply",
+ *   required={"post"}
+ *  ),
+ * @OA\Property(
+ *     property="id",
+ *     type="integer",
+ *     description="ID",
+ *     example=1
+ *  ),
  * @property integer $id
+ *
+ * @OA\Property(
+ *     property="post_id",
+ *     type="integer",
+ *     description="ID of post",
+ *     example=1
+ * ),
  * @property integer $post_id
+ *
+ * @OA\Property(
+ *     property="author_id",
+ *     type="integer",
+ *     description="ID",
+ *     example=1
+ * ),
  * @property integer $author_id
+ *
+ * @OA\Property(
+ *     property="reply",
+ *     type="string",
+ *     description="reply",
+ *     example="comment1"
+ * ),
  * @property string $reply
+ *
+ * @QA\Property(
+ *     property="post",
+ *     type="object",
+ *     ref="#/components/schemas/Post"
+ * )
  * @property Post $post
  */
 class Reply extends \yii\db\ActiveRecord
@@ -32,6 +70,16 @@ class Reply extends \yii\db\ActiveRecord
     {
         $this->author_id = Yii::$app->user->getId();
         return parent::beforeSave($insert);
+    }
+
+
+    public function fields()
+    {
+        return [
+            'author_id',
+            'post_id',
+            'reply'
+        ];
     }
 
     public function getPost()

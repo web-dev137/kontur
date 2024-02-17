@@ -8,7 +8,10 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
+use OpenApi\Annotations as QA;
+use OpenApi\Generator;
+use yii\web\ServerErrorHttpException;
+
 
 class SiteController extends Controller
 {
@@ -18,6 +21,14 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
+            'corsFilters' => [
+                'class' => 'yii\filters\Cors',
+                'cors' => [
+                    'Origins' => '*',
+                    'Access-Control-Allow-Headers' => ["Content-Type", "api_key", "Authorization"],
+                    'Access-Control-Allow-Credentials' => true,
+                ],
+            ],
             'access' => [
                 'class' => AccessControl::class,
                 'only' => ['logout'],
@@ -54,11 +65,6 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         return $this->render('index');
@@ -124,5 +130,19 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionGenSwg()
+    {
+        $root = Yii::getAlias('@webroot');
+
+        $swagger = Generator::scan([$root.'/../controllers',$root.'/../models']);
+        header("Content-Type: application/json");
+        return $swagger->toJson();
+    }
+
+    public function actionDocs()
+    {
+        return $this->redirect(Yii::getAlias('@web') . 'swagger-ui/index.php');
     }
 }

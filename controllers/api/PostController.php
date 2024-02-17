@@ -2,23 +2,50 @@
 
 namespace app\controllers\api;
 
-
 use app\models\Post;
 use app\models\Reply;
 use app\models\User;
 use Yii;
 use yii\base\ErrorException;
-use yii\db\ActiveRecord;
 use yii\filters\AccessControl;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
-use yii\filters\auth\QueryParamAuth;
-use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\web\Response;
-use yii\web\ServerErrorHttpException;
+use OpenApi\Annotations as QA;
 
-
+/**
+ * @OA\Post(
+ *     tags={"Authorize"},
+ *     path="/api/post/create",
+ *     security={{ "Bearer":{} }},
+ *     description="Reply on post",
+ *     @QA\RequestBody(
+ *          required=true,
+ *          @QA\JsonContent(
+ *              type="object",
+ *              @OA\Property(
+ *                  property="post",
+ *                  description="post",
+ *                  type="string",
+ *                  example="post1 first"
+ *              ),
+ *             @QA\Property(
+ *                  property="status",
+ *                  description="status(public,auth,private) of the post",
+ *                  type="string",
+ *                  example="auth"
+ *             )
+ *          )
+ *     ),
+ *     @OA\Response(
+ *         response="200",
+ *         description="Post",
+ *         @QA\JsonContent(ref="#/components/schemas/Post")
+ *     ),
+ *     @QA\Response(response="500", description="Validation error")
+ * )
+ */
 class PostController extends \yii\rest\ActiveController
 {
     public $modelClass = 'app\models\Post';
@@ -75,7 +102,13 @@ class PostController extends \yii\rest\ActiveController
     }
 
     /**
-     * @return array
+     * @OA\Get(
+     *     tags={"Authorize"},
+     *     path="get-my-posts",
+     *     description="Return posts of current user",
+     *     security={{ "Bearer":{} }},
+     *     @QA\Response(response=200,description="success",@QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Post")))
+     * )
      */
     public function actionGetMyPosts(): array
     {
@@ -86,6 +119,15 @@ class PostController extends \yii\rest\ActiveController
     }
 
 
+    /**
+     * @OA\Get(
+     *     tags={"Authorize"},
+     *     path="get-all-posts",
+     *     description="Return all posts",
+     *     security={{ "Bearer":{} }},
+     *     @QA\Response(response=200,description="success",@QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Post")))
+     * )
+     */
     public function actionGetAllPosts()
     {
         $response = Yii::$app->getResponse();
@@ -99,6 +141,11 @@ class PostController extends \yii\rest\ActiveController
     }
 
     /**
+     * @OA\Get(
+     *     path="get-posts",
+     *     description="Return posts for all users",
+     *     @QA\Response(response=200,description="success",@QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Post")))
+     * )
      * @return Post[]
      */
     public function actionGetPosts():array
@@ -109,6 +156,26 @@ class PostController extends \yii\rest\ActiveController
     }
 
     /**
+     * @OA\Get(
+     *     tags={"Authorize"},
+     *     path="get-replies/{post_id}",
+     *     description="Return replies of specify post",
+     *     security={{ "Bearer":{} }},
+     *     @QA\Parameter(
+     *          name="post_id",
+     *          in="path",
+     *          required=true,
+     *          description="post Id",
+     *          @QA\Schema(
+     *              type="integer",
+     *              format="int64"
+     *          ),
+     *          example=1
+     *     ),
+     *     @QA\Response(response=200,description="success",
+     *          @QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Reply"))
+     *     )
+     * )
      * @param int $post_id
      * @return Reply[]
      */
@@ -120,6 +187,32 @@ class PostController extends \yii\rest\ActiveController
     }
 
     /**
+     * @OA\Post(
+     *     tags={"Authorize"},
+     *     path="/api/reply/{post_id}",
+     *     security={{ "Bearer":{} }},
+     *     description="Reply on post",
+     *     @QA\Parameter(
+     *          name="post_id",
+     *          in="path",
+     *          description="The ID of the post the user is responding to.",
+     *          required=true,
+     *          @QA\Schema(
+     *              type="integer",
+     *              format="int64"
+     *          )
+     *     ),
+     *     @QA\RequestBody(
+     *          required=true,
+     *          @QA\JsonContent(ref="#/components/schemas/Reply")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Reply",
+     *         @QA\JsonContent(ref="#/components/schemas/Reply")
+     *     ),
+     *     @QA\Response(response="500", description="Validation error")
+     * )
      * @param int $post_id
      * @return Reply
      * @throws ErrorException

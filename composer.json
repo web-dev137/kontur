@@ -18,7 +18,9 @@
         "yiisoft/yii2": "~2.0.45",
         "yiisoft/yii2-bootstrap5": "~2.0.2",
         "yiisoft/yii2-symfonymailer": "~2.0.3",
-      "ext-json": "*"
+      "ext-json": "*",
+        "doctrine/annotations": "^2.0",
+        "swagger-api/swagger-ui": "^5.11"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -33,7 +35,8 @@
         "codeception/verify": "^3.0 || ^2.2",
         "symfony/browser-kit": "^6.0 || >=2.7 <=4.2.4",
         "codeception/module-rest": "^3.3",
-        "codeception/module-phpbrowser": "^3.0"
+        "codeception/module-phpbrowser": "^3.0",
+        "zircote/swagger-php": "^4.8"
     },
     "config": {
         "allow-plugins": {
