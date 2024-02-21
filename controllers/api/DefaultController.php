@@ -14,18 +14,16 @@ use OpenApi\Annotations as QA;
  * @QA\Info(
  *      title="Post API",
  *      version="1.0"
- * )
+ * ),
+ * @OA\SecurityScheme(
+ *   securityScheme="Bearer",
+ *   scheme="bearer",
+ *   type="http"
+ * ),
  */
 class DefaultController extends Controller
 {
 
-    /**
-     * @OA\Get(
-     *     path="/api",
-     *     description="Home page",
-     *     @OA\Response(response="200", description="Welcome page")
-     * )
-     */
     public function actionIndex()
     {
         return 'api';
@@ -38,35 +36,15 @@ class DefaultController extends Controller
      *     @QA\RequestBody(
      *          required=true,
      *          @QA\JsonContent(
-     *                  type="object",
-     *                  @QA\Property(
-     *                      property="login",
-     *                      description="user login",
-     *                      type="string"
-     *                  ),
-     *                  @QA\Property(
-     *                      property="password",
-     *                      description="user password",
-     *                      type="string"
-     *                  )
+     *                ref="#/components/schemas/UserRequest"
      *          )
      *     ),
      *     @OA\Response(response="200", description="Token",@QA\JsonContent(ref="#/components/schemas/Token")),
-     *     @QA\Response(response="500", description="Login model",
-     *          @QA\JsonContent(
-     *              type="object",
-     *              @QA\Property(
-     *                  property="login",
-     *                  description="user login",
-     *                  type="string"
-     *              ),
-     *             @QA\Property(
-     *                 property="password",
-     *                 description="user password",
-     *                 type="string"
-     *              )
-     *          )
-     *     )
+     *     @QA\Response(
+     *          response="500",
+     *          description="Login model",
+     *          @QA\JsonContent(ref="#/components/schemas/UserRequest")
+     *      )
      * )
      */
     public function actionLogin()
@@ -83,6 +61,22 @@ class DefaultController extends Controller
         }
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/api/sign-up",
+     *     description="SignUp",
+     *     @QA\RequestBody(
+     *          required=true,
+     *          @QA\JsonContent(ref="#/components/schemas/UserRequest")
+     *     ),
+     *     @OA\Response(response="200", description="User",@QA\JsonContent(ref="#/components/schemas/User")),
+     *     @QA\Response(response="500", description="Throw exception")
+     * )
+     *
+     * @return User|null
+     * @throws ErrorException
+     */
     public function actionSignUp()
     {
         $model = new SignupForm;
@@ -90,10 +84,7 @@ class DefaultController extends Controller
         if(!$user = $model->signup()) {
             throw new ErrorException('Произошла ошибка при сохранении модели пользователя.');
         } else {
-            return [
-                'status' => 'success',
-                'data' => $user
-            ];
+            return $user;
         }
 
     }

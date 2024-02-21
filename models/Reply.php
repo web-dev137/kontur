@@ -8,7 +8,7 @@ use OpenApi\Annotations as QA;
 /**
  * @OA\Schema(
  *   schema="Reply",
- *   required={"post"}
+ *   required={"reply"}
  *  ),
  * @OA\Property(
  *     property="id",
@@ -42,12 +42,7 @@ use OpenApi\Annotations as QA;
  * ),
  * @property string $reply
  *
- * @QA\Property(
- *     property="post",
- *     type="object",
- *     ref="#/components/schemas/Post"
- * )
- * @property Post $post
+ * @property Post $parentPost
  */
 class Reply extends \yii\db\ActiveRecord
 {
@@ -73,16 +68,7 @@ class Reply extends \yii\db\ActiveRecord
     }
 
 
-    public function fields()
-    {
-        return [
-            'author_id',
-            'post_id',
-            'reply'
-        ];
-    }
-
-    public function getPost()
+    public function getParentPost()
     {
         return $this->hasOne(Post::class,['id'=>'post_id']);
     }

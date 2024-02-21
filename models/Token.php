@@ -12,28 +12,32 @@ use OpenApi\Annotations as QA;
  * @OA\Property(
  *     property="id",
  *     type="integer",
- *     description="ID"
+ *     description="ID",
+ *     example="1"
  * ),
  * @property integer $id
  *
  * @OA\Property(
  *     property="user_id",
  *     type="integer",
- *     description="ID user"
+ *     description="ID user",
+ *     example="1"
  * ),
  * @property integer $user_id
  *
  * @OA\Property(
  *     property="expired_at",
  *     type="integer",
- *     description="expired time"
+ *     description="expired time",
+ *     example="ODAVKSEML9CK6Mb6E_LcDAfua7w566R4"
  * ),
  * @property integer $expired_at
  *
  * @OA\Property(
  *     property="token",
  *     type="string",
- *     description="Token"
+ *     description="Token",
+ *     example="token-correct"
  * ),
  * @property string $token
  */

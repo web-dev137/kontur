@@ -17,9 +17,40 @@ use OpenApi\Annotations as QA;
 /**
  * @OA\Post(
  *     tags={"Authorize"},
- *     path="/api/post/create",
+ *     path="/api/post",
  *     security={{ "Bearer":{} }},
  *     description="Reply on post",
+ *     @QA\RequestBody(
+ *          required=true,
+ *          @QA\JsonContent(ref="#/components/schemas/PostRequest")
+ *     ),
+ *     @OA\Response(
+ *         response="200",
+ *         description="Post",
+ *         @QA\JsonContent(ref="#/components/schemas/Post")
+ *     ),
+ *     @QA\Response(response="500", description="Validation error"),
+ *     @OA\Response(
+ *         response="401",
+ *         description="Unauthorized"
+ *     ),
+ * ),
+ * @OA\Patch(
+ *     tags={"Authorize"},
+ *     path="/api/post/{id}",
+ *     security={{ "Bearer":{} }},
+ *     description="Reply on post",
+ *     @QA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID",
+ *          @QA\Schema(
+ *              type="integer",
+ *              format="int64"
+ *          ),
+ *          example=1
+ *     ),
  *     @QA\RequestBody(
  *          required=true,
  *          @QA\JsonContent(
@@ -43,7 +74,46 @@ use OpenApi\Annotations as QA;
  *         description="Post",
  *         @QA\JsonContent(ref="#/components/schemas/Post")
  *     ),
+ *     @OA\Response(
+ *         response="403",
+ *         description="Forbidden"
+ *     ),
+ *     @OA\Response(
+ *         response="401",
+ *         description="Unauthorized"
+ *     ),
  *     @QA\Response(response="500", description="Validation error")
+ * ),
+ *
+ * @OA\Delete(
+ *     tags={"Authorize"},
+ *     path="/api/post/{id}",
+ *     security={{ "Bearer":{} }},
+ *     description="Delete post",
+ *     @QA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID of post to delete",
+ *          @QA\Schema(
+ *              type="integer",
+ *              format="int64"
+ *          ),
+ *          example=1
+ *     ),
+ *     @OA\Response(
+ *         response="204",
+ *         description="Post",
+ *         @QA\JsonContent(ref="#/components/schemas/Post")
+ *     ),
+ *     @OA\Response(
+ *         response="401",
+ *         description="Unauthorized"
+ *     ),
+ *     @OA\Response(
+ *         response="403",
+ *         description="Forbidden"
+ *     ),
  * )
  */
 class PostController extends \yii\rest\ActiveController
@@ -104,10 +174,15 @@ class PostController extends \yii\rest\ActiveController
     /**
      * @OA\Get(
      *     tags={"Authorize"},
-     *     path="get-my-posts",
+     *     path="/api/post/get-my-posts",
      *     description="Return posts of current user",
      *     security={{ "Bearer":{} }},
-     *     @QA\Response(response=200,description="success",@QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Post")))
+     *     @QA\Response(response=200,description="success",
+     *         @QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Post"))
+     *     ),
+     *     @QA\Response(response=403,description="forbidden"),
+     *     @QA\Response(response="401", description="Unauthorized"),
+     *
      * )
      */
     public function actionGetMyPosts(): array
@@ -122,10 +197,13 @@ class PostController extends \yii\rest\ActiveController
     /**
      * @OA\Get(
      *     tags={"Authorize"},
-     *     path="get-all-posts",
+     *     path="/api/post/get-all-posts",
      *     description="Return all posts",
      *     security={{ "Bearer":{} }},
-     *     @QA\Response(response=200,description="success",@QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Post")))
+     *     @QA\Response(response=200,description="success",
+     *              @QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Post"))
+     *      ),
+     *     @QA\Response(response="401", description="Unauthorized")
      * )
      */
     public function actionGetAllPosts()
@@ -142,9 +220,12 @@ class PostController extends \yii\rest\ActiveController
 
     /**
      * @OA\Get(
-     *     path="get-posts",
+     *     path="/api/post/get-posts",
      *     description="Return posts for all users",
-     *     @QA\Response(response=200,description="success",@QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Post")))
+     *     @QA\Response(
+     *          response=200,description="success",
+     *          @QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Post"))
+     *      )
      * )
      * @return Post[]
      */
@@ -158,7 +239,7 @@ class PostController extends \yii\rest\ActiveController
     /**
      * @OA\Get(
      *     tags={"Authorize"},
-     *     path="get-replies/{post_id}",
+     *     path="/api/post/{post_id}/get-replies",
      *     description="Return replies of specify post",
      *     security={{ "Bearer":{} }},
      *     @QA\Parameter(
@@ -174,7 +255,8 @@ class PostController extends \yii\rest\ActiveController
      *     ),
      *     @QA\Response(response=200,description="success",
      *          @QA\JsonContent(type="array",@QA\Items(ref="#/components/schemas/Reply"))
-     *     )
+     *     ),
+     *     @QA\Response(response="401", description="Unauthorized")
      * )
      * @param int $post_id
      * @return Reply[]
@@ -189,7 +271,7 @@ class PostController extends \yii\rest\ActiveController
     /**
      * @OA\Post(
      *     tags={"Authorize"},
-     *     path="/api/reply/{post_id}",
+     *     path="/api/post/{post_id}/reply",
      *     security={{ "Bearer":{} }},
      *     description="Reply on post",
      *     @QA\Parameter(
@@ -204,14 +286,15 @@ class PostController extends \yii\rest\ActiveController
      *     ),
      *     @QA\RequestBody(
      *          required=true,
-     *          @QA\JsonContent(ref="#/components/schemas/Reply")
+     *          @QA\JsonContent(ref="#/components/schemas/ReplyRequest")
      *     ),
      *     @OA\Response(
-     *         response="200",
+     *         response="201",
      *         description="Reply",
      *         @QA\JsonContent(ref="#/components/schemas/Reply")
      *     ),
-     *     @QA\Response(response="500", description="Validation error")
+     *     @QA\Response(response="500", description="Validation error"),
+     *     @QA\Response(response="401", description="Unauthorized")
      * )
      * @param int $post_id
      * @return Reply

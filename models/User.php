@@ -9,14 +9,65 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use OpenApi\Annotations as QA;
 
 /**
+ * @OA\Schema(
+ *     title="User",
+ *     required={"login"}
+ *  ),
+ * @QA\Property(
+ *     property="id",
+ *     type="int",
+ *     description="ID",
+ *     readOnly=true,
+ *     example="1"
+ * ),
  * @property int $id
+ *
+ * @QA\Property(
+ *     property="login",
+ *     type="string",
+ *     description="Login",
+ *     example="userNew"
+ * ),
  * @property string $login
  * @property string $password_hash
+ *
+ * @QA\Property(
+ *     property="auth_key",
+ *     type="string",
+ *     description="Auth key",
+ *     readOnly=true,
+ *     example="JU_kCvpzBC03YSkUbloLcJ6G0v1_UY75"
+ * ),
  * @property string $auth_key
+ *
+ * @QA\Property(
+ *     property="is_archived",
+ *     type="string",
+ *     description="Is archived user",
+ *     readOnly=true,
+ *     example="0"
+ * ),
  * @property bool $is_archived
+ *
+ * @QA\Property(
+ *     property="created_at",
+ *     type="int",
+ *     description="Created at",
+ *     readOnly=true,
+ *     example="1705700550"
+ * ),
  * @property int $created_at
+ *
+ * @QA\Property(
+ *     property="updated_at",
+ *     type="int",
+ *     description="Updated at",
+ *     readOnly=true,
+ *     example="1705700550"
+ * ),
  * @property int $updated_at
  */
 class User extends ActiveRecord implements IdentityInterface
