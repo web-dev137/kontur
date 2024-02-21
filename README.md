@@ -3,7 +3,7 @@ Task was in create RESTful API for blog.
 The API for the blog included the following requirements:
 1. Sign up and login for users.
 2. For authorized users available CRUD for posts.
-Each status has status(private,public,auth), where:
+Each post has status(private,public,auth), where:
 public - visible for all(include guests),
 auth - visible for authorized users,
 private - visible for author of post.
