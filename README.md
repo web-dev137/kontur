@@ -47,7 +47,7 @@ git clone <project-path>
 ~~~
 composer install
 ~~~
-- Accept migrations
+- Apply migrations
 ~~~
 php yii migrate
 ~~~
