@@ -190,7 +190,9 @@ class PostController extends \yii\rest\ActiveController
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_JSON;
         $response->setStatusCode(200);
-        return Post::findAll(['author_id' => Yii::$app->user->getId()]);
+        return Yii::$app->cache->getOrSet('get-my-posts',function (){
+           return Post::findAll(['author_id' => Yii::$app->user->getId()]);
+        });
     }
 
 
@@ -211,11 +213,13 @@ class PostController extends \yii\rest\ActiveController
         $response = Yii::$app->getResponse();
         $response->format = Response::FORMAT_JSON;
         $response->setStatusCode(200);
-        return Post::find()->where(['or',
-            ['=','status',Post::AUTH],
-            ['=','status',Post::GUEST],
-            ['=','author_id',Yii::$app->user->getId()]
-        ])->all();
+        return Yii::$app->cache->getOrSet('get-all-posts',function () {
+            return Post::find()->where(['or',
+                ['=', 'status', Post::AUTH],
+                ['=', 'status', Post::GUEST],
+                ['=', 'author_id', Yii::$app->user->getId()]
+            ])->all();
+        });
     }
 
     /**
@@ -233,7 +237,9 @@ class PostController extends \yii\rest\ActiveController
     {
         $response = Yii::$app->getResponse();
         $response->setStatusCode(200);
-        return Post::findAll(['status' => Post::GUEST]);
+        return Yii::$app->cache->getOrSet('get-posts',function () {
+            return Post::findAll(['status' => Post::GUEST]);
+        });
     }
 
     /**
@@ -265,7 +271,10 @@ class PostController extends \yii\rest\ActiveController
     {
         $response = Yii::$app->getResponse();
         $response->setStatusCode(200);
-        return Reply::findAll(['post_id' => $post_id]);
+        return Yii::$app->cache->getOrSet('get-replies',
+            function () use ($post_id) {
+                return Reply::findAll(['post_id' => $post_id]);
+            });
     }
 
     /**
